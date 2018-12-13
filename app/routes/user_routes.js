@@ -9,8 +9,12 @@ const bcrypt = require('bcrypt')
 // see above for explanation of "salting", 10 rounds is recommended
 const bcryptSaltRounds = 10
 
+// pull in error types and the logic to handle them and set status codes
+const errors = require('../../lib/custom_errors')
 const handle = require('../../lib/error_handler')
-const BadParamsError = require('../../lib/custom_errors').BadParamsError
+
+const BadParamsError = errors.BadParamsError
+const BadCredentialsError = errors.BadCredentialsError
 
 const User = require('../models/user')
 
@@ -63,9 +67,9 @@ router.post('/sign-in', (req, res) => {
   // find a user based on the email that was passed
   User.findOne({ email: req.body.credentials.email })
     .then(record => {
-      // if we didn't find a user with that email, send 422
+      // if we didn't find a user with that email, send 401
       if (!record) {
-        throw new BadParamsError()
+        throw new BadCredentialsError()
       }
       // save the found user outside the promise chain
       user = record
@@ -83,8 +87,8 @@ router.post('/sign-in', (req, res) => {
         return user.save()
       } else {
         // throw an error to trigger the error handler and end the promise chain
-        // this will send back 422 and a message about sending wrong parameters
-        throw new BadParamsError()
+        // this will send back 401 and a message about sending wrong parameters
+        throw new BadCredentialsError()
       }
     })
     .then(user => {
