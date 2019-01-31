@@ -222,5 +222,25 @@ describe('Examples', () => {
           done()
         })
     })
+
+    it('doesn\'t overwrite fields with empty strings', done => {
+      chai.request(server)
+        .patch(`/examples/${exampleId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ example: { text: '' } })
+        .then(() => {
+          chai.request(server)
+            .get(`/examples/${exampleId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .end((e, res) => {
+              res.should.have.status(200)
+              res.body.should.be.a('object')
+              console.log(res.body.example.text)
+              res.body.example.title.should.eql(fields.title)
+              res.body.example.text.should.eql(fields.text)
+              done()
+            })
+        })
+    })
   })
 })
