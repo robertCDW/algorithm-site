@@ -100,6 +100,16 @@ describe('Examples', () => {
           done()
         })
     })
+
+    it('should return 404 if the resource doesn\'t exist', done => {
+      chai.request(server)
+        .delete('/examples/' + exampleId)
+        .set('Authorization', `Bearer ${token}`)
+        .end((e, res) => {
+          res.should.have.status(404)
+          done()
+        })
+    })
   })
 
   describe('POST /examples', () => {
