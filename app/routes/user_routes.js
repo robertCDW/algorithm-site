@@ -11,7 +11,6 @@ const bcryptSaltRounds = 10
 
 // pull in error types and the logic to handle them and set status codes
 const errors = require('../../lib/custom_errors')
-const handle = require('../../lib/error_handler')
 
 const BadParamsError = errors.BadParamsError
 const BadCredentialsError = errors.BadCredentialsError
@@ -28,7 +27,7 @@ const router = express.Router()
 
 // SIGN UP
 // POST /sign-up
-router.post('/sign-up', (req, res) => {
+router.post('/sign-up', (req, res, next) => {
   // start a promise chain, so that any errors will pass to `handle`
   Promise.resolve(req.body.credentials)
     // reject any requests where `credentials.password` is not present, or where
@@ -55,12 +54,12 @@ router.post('/sign-up', (req, res) => {
     // won't be send because of the `transform` in the User model
     .then(user => res.status(201).json({ user: user.toObject() }))
     // pass any errors along to the error handler
-    .catch(err => handle(err, res))
+    .catch(next)
 })
 
 // SIGN IN
 // POST /sign-in
-router.post('/sign-in', (req, res) => {
+router.post('/sign-in', (req, res, next) => {
   const pw = req.body.credentials.password
   let user
 
@@ -95,12 +94,12 @@ router.post('/sign-in', (req, res) => {
       // return status 201, the email, and the new token
       res.status(201).json({ user: user.toObject() })
     })
-    .catch(err => handle(err, res))
+    .catch(next)
 })
 
 // CHANGE password
 // PATCH /change-password
-router.patch('/change-password', requireToken, (req, res) => {
+router.patch('/change-password', requireToken, (req, res, next) => {
   let user
   // `req.user` will be determined by decoding the token payload
   User.findById(req.user.id)
@@ -127,16 +126,16 @@ router.patch('/change-password', requireToken, (req, res) => {
     // respond with no content and status 200
     .then(() => res.sendStatus(204))
     // pass any errors along to the error handler
-    .catch(err => handle(err, res))
+    .catch(next)
 })
 
-router.delete('/sign-out', requireToken, (req, res) => {
+router.delete('/sign-out', requireToken, (req, res, next) => {
   // create a new random token for the user, invalidating the current one
   req.user.token = crypto.randomBytes(16)
   // save the token and respond with 204
   req.user.save()
     .then(() => res.sendStatus(204))
-    .catch(err => handle(err, res))
+    .catch(next)
 })
 
 module.exports = router
