@@ -16,6 +16,9 @@ const handle404 = customErrors.handle404
 // that's owned by someone else
 const requireOwnership = customErrors.requireOwnership
 
+// this is middleware that will remove blank fields from `req.body`, e.g.
+// { example: { title: '', text: 'foo' } } -> { example: { text: 'foo' } }
+const removeBlanks = require('../../lib/remove_blank_fields')
 // passing this as a second argument to `router.<verb>` will make it
 // so that a token MUST be passed for that route to be available
 // it will also set `req.user`
@@ -71,7 +74,7 @@ router.post('/examples', requireToken, (req, res, next) => {
 
 // UPDATE
 // PATCH /examples/5a7db6c74d55bc51bdf39793
-router.patch('/examples/:id', requireToken, (req, res, next) => {
+router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.example.owner
@@ -82,15 +85,6 @@ router.patch('/examples/:id', requireToken, (req, res, next) => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
       // it will throw an error if the current user isn't the owner
       requireOwnership(req, example)
-
-      // the client will often send empty strings for parameters that it does
-      // not want to update. We delete any key/value pair where the value is
-      // an empty string before updating
-      Object.keys(req.body.example).forEach(key => {
-        if (req.body.example[key] === '') {
-          delete req.body.example[key]
-        }
-      })
 
       // pass the result of Mongoose's `.update` to the next `.then`
       return example.update(req.body.example)
