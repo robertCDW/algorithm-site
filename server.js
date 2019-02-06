@@ -11,8 +11,6 @@ const userRoutes = require('./app/routes/user_routes')
 // require error handling middleware
 const errorHandler = require('./lib/error_handler')
 
-console.log(errorHandler)
-
 // require database configuration logic
 // `db` will be the actual Mongo URI as a string
 const db = require('./config/db')
