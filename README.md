@@ -15,11 +15,6 @@ authentication and common middlewares.
 1.  Replace all instances of `'express-api-template'` with your app name.
 1.  Install dependencies with `npm install`.
 1.  Ensure that you have `nodemon` installed by running `npm install -g nodemon`.
-1.  From the root of your repository, run the following commands. They will set a SECRET_KEY for development and testing.
- ```sh
- echo SECRET_KEY_BASE_TEST=$(openssl rand -base64 66 | tr -d '\n') >> .env
- echo SECRET_KEY_BASE_DEVELOPMENT=$(openssl rand -base64 66 | tr -d '\n') >> .env
- ```
 1.  Ensure the API is functioning properly by running `npm run server`.
 1.  Once everything is working, make an initial commit.
 1.  Follow the steps in [express-api-deployment-guide](https://git.generalassemb.ly/ga-wdi-boston/express-api-deployment-guide)
