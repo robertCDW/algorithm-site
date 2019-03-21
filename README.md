@@ -69,8 +69,8 @@ Use this as the basis for your own API documentation. Add a new third-level
 heading for your custom entities, and follow the pattern provided for the
 built-in user authentication documentation.
 
-Scripts are included in [`scripts`](scripts) to test built-in actions. Add your
-own scripts to test your custom API.
+Scripts are included in [`curl-scripts`](curl-scripts) to test built-in actions.
+Add your own scripts to test your custom API.
 
 ### Authentication
 
@@ -98,7 +98,7 @@ curl --include --request POST http://localhost:4741/sign-up \
 ```
 
 ```sh
-scripts/sign-up.sh
+curl-scripts/sign-up.sh
 ```
 
 Response:
@@ -131,7 +131,7 @@ curl --include --request POST http://localhost:4741/sign-in \
 ```
 
 ```sh
-scripts/sign-in.sh
+curl-scripts/sign-in.sh
 ```
 
 Response:
@@ -166,7 +166,7 @@ curl --include --request PATCH http://localhost:4741/change-password/ \
 ```
 
 ```sh
-TOKEN=33ad6372f795694b333ec5f329ebeaaa scripts/change-password.sh
+TOKEN=33ad6372f795694b333ec5f329ebeaaa curl-scripts/change-password.sh
 ```
 
 Response:
@@ -185,7 +185,7 @@ curl --include --request DELETE http://localhost:4741/sign-out/ \
 ```
 
 ```sh
-TOKEN=33ad6372f795694b333ec5f329ebeaaa scripts/sign-out.sh
+TOKEN=33ad6372f795694b333ec5f329ebeaaa curl-scripts/sign-out.sh
 ```
 
 Response:
