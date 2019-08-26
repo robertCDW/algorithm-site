@@ -52,7 +52,7 @@ describe('Users', () => {
   })
 
   after(done => {
-    User.remove({})
+    User.deleteMany({})
       .then(() => done())
       .catch(() => done())
   })
@@ -93,7 +93,7 @@ describe('Users', () => {
     })
 
     it('should create a user if params are valid', done => {
-      User.remove({})
+      User.deleteMany({})
         .then(() => {
           chai.request(server)
             .post('/sign-up')
@@ -183,8 +183,6 @@ describe('Users', () => {
         .send(changePwParams)
         .end((e, res) => {
           res.should.have.status(204)
-        })
-        .then(() => {
           chai.request(server)
             .post('/sign-in')
             .send(updatedUser)

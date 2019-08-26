@@ -87,7 +87,7 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
       requireOwnership(req, example)
 
       // pass the result of Mongoose's `.update` to the next `.then`
-      return example.update(req.body.example)
+      return example.updateOne(req.body.example)
     })
     // if that succeeded, return 204 and no JSON
     .then(() => res.sendStatus(204))
@@ -104,7 +104,7 @@ router.delete('/examples/:id', requireToken, (req, res, next) => {
       // throw an error if current user doesn't own `example`
       requireOwnership(req, example)
       // delete the example ONLY IF the above didn't throw
-      example.remove()
+      example.deleteOne()
     })
     // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
