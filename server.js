@@ -8,9 +8,10 @@ const cors = require('cors')
 const exampleRoutes = require('./app/routes/example_routes')
 const userRoutes = require('./app/routes/user_routes')
 
-// require error handling middleware
+// require middleware
 const errorHandler = require('./lib/error_handler')
 const replaceToken = require('./lib/replace_token')
+const requestLogger = require('./lib/request_logger')
 
 // require database configuration logic
 // `db` will be the actual Mongo URI as a string
@@ -57,6 +58,9 @@ app.use(auth)
 app.use(bodyParser.json())
 // this parses requests sent by `$.ajax`, which use a different content type
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// log each request as it comes in for debugging
+app.use(requestLogger)
 
 // register route files
 app.use(exampleRoutes)
