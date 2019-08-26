@@ -19,9 +19,12 @@ const db = require('./config/db')
 const auth = require('./lib/auth')
 
 // establish database connection
+// use new version of URL parser
+// use createIndex instead of deprecated ensureIndex
 mongoose.Promise = global.Promise
 mongoose.connect(db, {
-  useMongoClient: true
+  useNewUrlParser: true,
+  useCreateIndex: true
 })
 
 // instantiate express application object
