@@ -10,6 +10,7 @@ const userRoutes = require('./app/routes/user_routes')
 
 // require error handling middleware
 const errorHandler = require('./lib/error_handler')
+const replaceToken = require('./lib/replace_token')
 
 // require database configuration logic
 // `db` will be the actual Mongo URI as a string
@@ -45,15 +46,7 @@ const port = process.env.PORT || serverDevPort
 // this middleware makes it so the client can use the Rails convention
 // of `Authorization: Token token=<token>` OR the Express convention of
 // `Authorization: Bearer <token>`
-app.use((req, res, next) => {
-  if (req.headers.authorization) {
-    const auth = req.headers.authorization
-    // if we find the Rails pattern in the header, replace it with the Express
-    // one before `passport` gets a look at the headers
-    req.headers.authorization = auth.replace('Token token=', 'Bearer ')
-  }
-  next()
-})
+app.use(replaceToken)
 
 // register passport authentication middleware
 app.use(auth)
