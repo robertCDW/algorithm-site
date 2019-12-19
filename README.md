@@ -8,9 +8,9 @@ authentication and common middlewares.
 ## Installation
 
 1. [Download](../../archive/master.zip) this template.
-1. Move the .zip file to your `wdi/projects/` directory and Unzip it (creating a
+1. Move the .zip file to your `sei/projects/` directory and Unzip it (creating a
    folder) -- **NOTE:** if the folder was already unzipped, use the `mv` command
-   line to move it to the `wdi/projects/` directory.
+   line to move it to the `sei/projects/` directory.
 1. Rename the directory from express-api-template -> your-app-name.
 1. Empty [`README.md`](README.md) and fill with your own content.
 1. Move into the new project and `git init`.
