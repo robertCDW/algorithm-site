@@ -27,7 +27,6 @@ const clientDevPort = 7165
 // establish database connection
 // use new version of URL parser
 // use createIndex instead of deprecated ensureIndex
-mongoose.Promise = global.Promise
 mongoose.connect(db, {
   useNewUrlParser: true,
   useCreateIndex: true
