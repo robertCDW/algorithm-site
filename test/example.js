@@ -18,7 +18,7 @@ let exampleId
 
 describe('Examples', () => {
   const exampleParams = {
-    title: '13 JavaScript tricks WDI instructors don\'t want you to know',
+    title: '13 JavaScript tricks SEI instructors don\'t want you to know',
     text: 'You won\'believe number 8!'
   }
 
