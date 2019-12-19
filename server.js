@@ -1,6 +1,5 @@
 // require necessary NPM packages
 const express = require('express')
-const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
@@ -52,12 +51,12 @@ app.use(replaceToken)
 // register passport authentication middleware
 app.use(auth)
 
-// add `bodyParser` middleware which will parse JSON requests into
+// add `express.json` middleware which will parse JSON requests into
 // JS objects before they reach the route files.
 // The method `.use` sets up middleware for the Express application
-app.use(bodyParser.json())
+app.use(express.json())
 // this parses requests sent by `$.ajax`, which use a different content type
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }))
 
 // log each request as it comes in for debugging
 app.use(requestLogger)
