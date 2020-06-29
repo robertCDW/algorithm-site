@@ -157,7 +157,7 @@ Request:
 
 ```sh
 curl --include --request PATCH http://localhost:4741/change-password/ \
-  --header "Authorization: Token token=$TOKEN" \
+  --header "Authorization: Bearer $TOKEN" \
   --header "Content-Type: application/json" \
   --data '{
     "passwords": {
@@ -183,7 +183,7 @@ Request:
 
 ```sh
 curl --include --request DELETE http://localhost:4741/sign-out/ \
-  --header "Authorization: Token token=$TOKEN"
+  --header "Authorization: Bearer $TOKEN"
 ```
 
 ```sh
