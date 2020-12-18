@@ -9,7 +9,6 @@ const userRoutes = require('./app/routes/user_routes')
 
 // require middleware
 const errorHandler = require('./lib/error_handler')
-const replaceToken = require('./lib/replace_token')
 const requestLogger = require('./lib/request_logger')
 
 // require database configuration logic
@@ -41,11 +40,6 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN || `http://localhost:${clientDe
 
 // define port for API to run on
 const port = process.env.PORT || serverDevPort
-
-// this middleware makes it so the client can use the Rails convention
-// of `Authorization: Token token=<token>` OR the Express convention of
-// `Authorization: Bearer <token>`
-app.use(replaceToken)
 
 // register passport authentication middleware
 app.use(auth)
