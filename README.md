@@ -7,7 +7,7 @@ authentication and common middlewares.
 
 ## Installation
 
-1. [Download](../../archive/master.zip) this template.
+1. [Download](../../archive/main.zip) this template.
 1. Move the .zip file to your `sei/projects/` directory and Unzip it (creating a
    folder) -- **NOTE:** if the folder was already unzipped, use the `mv` command
    line to move it to the `sei/projects/` directory.
