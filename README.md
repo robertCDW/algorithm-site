@@ -139,7 +139,7 @@ curl-scripts/sign-in.sh
 Response:
 
 ```md
-HTTP/1.1 200 OK
+HTTP/1.1 201 CREATED
 Content-Type: application/json; charset=utf-8
 
 {
