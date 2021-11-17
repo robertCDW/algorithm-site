@@ -19,7 +19,7 @@ authentication and common middlewares.
 1. Ensure that you have `nodemon` installed by running `npm install -g nodemon`.
 1. Ensure the API is functioning properly by running `npm run server`.
 1. Once everything is working, make an initial commit.
-1. Follow the steps in [express-api-deployment-guide](https://git.generalassemb.ly/ga-wdi-boston/express-api-deployment-guide)
+1. Follow the steps in [express-api-deployment-guide](https://git.generalassemb.ly/seir-flex-831/express-api-deployment-guide)
 
 ## Structure
 
@@ -139,7 +139,7 @@ curl-scripts/sign-in.sh
 Response:
 
 ```md
-HTTP/1.1 200 OK
+HTTP/1.1 201 CREATED
 Content-Type: application/json; charset=utf-8
 
 {

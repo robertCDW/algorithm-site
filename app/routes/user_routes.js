@@ -52,7 +52,7 @@ router.post('/sign-up', (req, res, next) => {
     .then(user => User.create(user))
     // send the new user object back with status 201, but `hashedPassword`
     // won't be send because of the `transform` in the User model
-    .then(user => res.status(201).json({ user: user.toObject() }))
+    .then(user => res.status(201).json({ user: user }))
     // pass any errors along to the error handler
     .catch(next)
 })
@@ -77,22 +77,23 @@ router.post('/sign-in', (req, res, next) => {
       return bcrypt.compare(pw, user.hashedPassword)
     })
     .then(correctPassword => {
-      // if the passwords matched
-      if (correctPassword) {
-        // the token will be a 16 byte random hex string
-        const token = crypto.randomBytes(16).toString('hex')
-        user.token = token
-        // save the token to the DB as a property on user
-        return user.save()
-      } else {
-        // throw an error to trigger the error handler and end the promise chain
-        // this will send back 401 and a message about sending wrong parameters
+      // if password does not match
+      if (!correctPassword) {
+        //  then throw a BadCredentialsError
         throw new BadCredentialsError()
       }
+
+      // create a token using crypto that is 16 bytes long in hexadecimal
+      // https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
+      const token = crypto.randomBytes(16).toString('hex')
+      // add token to user
+      user.token = token
+      // save user
+      return user.save()
     })
     .then(user => {
       // return status 201, the email, and the new token
-      res.status(201).json({ user: user.toObject() })
+      res.status(201).json({ user: user })
     })
     .catch(next)
 })
