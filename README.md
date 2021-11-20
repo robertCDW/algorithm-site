@@ -19,7 +19,14 @@ authentication and common middlewares.
 1. Ensure that you have `nodemon` installed by running `npm install -g nodemon`.
 1. Ensure the API is functioning properly by running `npm run server`.
 1. Once everything is working, make an initial commit.
-1. Follow the steps in [express-api-deployment-guide](https://git.generalassemb.ly/seir-flex-831/express-api-deployment-guide)
+6. Create a new repository on [github.com](https://github.com),
+    _not GitHub Enterprise_.
+7. Name the new repository with the same name used on Step 3.
+8. Follow the instructions on your new repository's setup page. For details on
+   how to push to Github, refer to the section on Github entitled **"…or push an existing
+   repository from the command line."** Further documentation can be found [here](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/).
+   > **Note:** This last step will rename your default branch to **main**. This branch name will be used when deploying.
+1. Before presentations follow the steps in [express-api-deployment-guide](https://git.generalassemb.ly/seir-flex-831/express-api-deployment-guide)
 
 ## Structure
 
