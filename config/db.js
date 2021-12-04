@@ -17,4 +17,13 @@ const localDb = process.env.TESTENV ? database.test : database.development
 // heroku production evironment otherwise use test or development db
 const currentDb = process.env.DB_URI || localDb
 
-module.exports = currentDb
+const config = {
+  db: currentDb,
+  dbSetup: {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  }
+}
+
+module.exports = config
