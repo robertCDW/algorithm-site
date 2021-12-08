@@ -12,6 +12,10 @@ const bubbleSortSchema = new Schema({
     last: {
         type: Schema.Types.ObjectId,
         ref: 'Bubble',
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
     }
 })
 

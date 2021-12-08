@@ -23,31 +23,35 @@ const router = require('express').Router()
 
 // POST to create new arr
 // needs to generate new numbers
-router.post('/bubble-sort', (req, res, next) => {
-    const newArr = []
+router.post('/bubble-sort', requireToken, (req, res, next) => {
+    
+    // // console.log(req.user._id)
+    // const newArr = []
 
-    // TODO: get from body
-    const num = 5
+    // // TODO: get from body
+    // const num = 5
 
-    for (let i = 0; i < num; i++) {
-        newArr.push(Math.floor(Math.random() * 100))
-    }
+    // for (let i = 0; i < num; i++) {
+    //     newArr.push(Math.floor(Math.random() * 100))
+    // }
 
     Bubble.create({
-        arr: newArr,
+        arr: req.body.arr,
         next: null
     })
     .then(bubble => {
-        console.log(bubble.arr)
+        // console.log(bubble.arr)
         BubbleSort.create({
             index: 0,
             solved: false,
-            length: num,
+            length: req.body.arr.length,
             first: bubble,
-            last: bubble
+            last: bubble,
+            owner: req.user._id,
         })
         .then(bubbles => {
-            console.log(bubbles)
+
+            // console.log(bubbles)
             res.status(200).json({ bubbles })
         })
     })
@@ -57,8 +61,10 @@ router.post('/bubble-sort', (req, res, next) => {
 // will show the start and end arrays
 // will need to populate multiple arrays
 
-router.get('/bubble-sort', (req, res, next) => {
-    BubbleSort.find()
+router.get('/bubble-sort', requireToken, (req, res, next) => {
+    // console.log(req.user._id)
+
+    BubbleSort.find({ 'owner': req.user._id })
         .populate('first')
         .populate('last')
         .then(bubbleSorts => {
@@ -66,11 +72,46 @@ router.get('/bubble-sort', (req, res, next) => {
         })
 })
 
+// housekeeping find/delete methods
+// ensures no unaccessible sorts/bubbles build up over time
+router.get('/bubble-sort/get-bubbles', (req, res, next) => {
+    
+    Bubble.find()
+    .then(bubbles => {
+        res.send({bubbles})
+    })
+})
+
+router.get('/bubble-sort/get-sorts', (req, res, next) => {
+    
+    BubbleSort.find()
+    .then(bubbles => {
+        res.send({bubbles})
+    })
+})
+
+router.delete('/bubble-sort/delete-bubbles', (req, res, next) => {
+    
+    Bubble.deleteMany()
+    .then(() => {
+        res.sendStatus(204)
+    })
+})
+
+router.delete('/bubble-sort/delete-sorts', (req, res, next) => {
+    
+    BubbleSort.deleteMany()
+    .then(bubbles => {
+        res.sendStatus(204)
+    })
+})
+// end housekeeping
+
 
 // SHOW will show one arr
 // will show one array plus the steps between...?
 
-router.get('/bubble-sort/:id', (req, res, next) => {
+router.get('/bubble-sort/:id', requireToken, (req, res, next) => {
     const bubbleSortId = req.params.id
     // let bubble
     const bubbles = []
@@ -98,9 +139,6 @@ router.get('/bubble-sort/:id', (req, res, next) => {
                         console.log(bubble.next)
                         bubbles.push(bubbleData)
                     })
-                
-                    setTimeout(() => {}, 1000)
-            }
 
             res.status(200).json({ bubbles })
             */
@@ -109,10 +147,67 @@ router.get('/bubble-sort/:id', (req, res, next) => {
         })
 })
 
+// move to above normal SHOW or it won't work lol
+// router.get('/bubble-sort/test/:id', (req, res, next) => {
+
+//     const bubbleSortId = req.params.id
+//     // let bubble
+    
+
+//     BubbleSort.findById(bubbleSortId)
+//     .populate('first')
+//     .populate('last')
+//     .then(bubbleSort => {
+
+//         const sort = getSort(bubbleSort.first)
+//         .then(sort => {
+//         console.log(sort)
+//         res.send(sort)
+//     })
+//     })
+// })
+
+// const getSort = async(bubble) => {
+//     let sort = bubble
+//     let sortArr = []
+//     let count = 0
+
+//     console.log(sort)
+
+//     while(count < 1){
+//         count++
+//         console.log("hello")
+//         sort = await BubbleSort.findById(sort.next)
+//         sortArr.push(sort)
+//         if (sort) {
+//             sort = sort.next
+//         }
+//     }
+    
+//     // console.log(sort)
+//     // res.send({sort})
+//     return sortArr
+// }
+
+// const getList = async () => {
+//     // console.log(sort.first.next)
+//     try {
+//         const values = await Bubble.findById("61aeea250c39b71f67815bf8").exec()
+//         console.log("hello")
+//         return values
+//     } catch (err) {
+//         return err
+//     }
+// }
+
+// const returnVal = () => {
+//     let val = await getList()
+//     return val
+// }
 
 // patch
 // moves bubble sort algorithm one step forward
-router.patch('/bubble-sort/:id', (req, res, next) => {
+router.patch('/bubble-sort/:id', requireToken, (req, res, next) => {
     const bubbleSortId = req.params.id
 
     let sortState
@@ -121,6 +216,7 @@ router.patch('/bubble-sort/:id', (req, res, next) => {
 
     BubbleSort.findById(bubbleSortId)
         .populate('first')
+        .then(event => requireOwnership(req, event))
         .then(sortStateData => {
             sortState = sortStateData
 
@@ -148,7 +244,7 @@ router.patch('/bubble-sort/:id', (req, res, next) => {
                     .then(newData => {
                         newBubble = newData
                         oldBubble.next = newBubble.id.toString()
-                        console.log(oldBubble.next)
+                        // console.log(oldBubble.next)
                         
                         return oldBubble.save()
                     })
@@ -170,8 +266,9 @@ router.patch('/bubble-sort/:id', (req, res, next) => {
 // currently leaves the steps between...? will need to loop through the list and delete those later
 // store array of IDs, then delete many by ID
 // could insert an owner and delete by owner...?
-router.delete('/bubble-sort/:id', (req, res, next) => {
+router.delete('/bubble-sort/:id', requireToken, (req, res, next) => {
     BubbleSort.findById(req.params.id)
+        .then(event => requireOwnership(req, event))
         .then(bubbleSort => {
             bubbleSort.deleteOne()
 
